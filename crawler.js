@@ -1,5 +1,5 @@
 const Crawler = require("crawler")
-const Hero = require('./heros')
+const Hero = require('./controller/heroController')
 
 let url = 'http://lol.duowan.com/hero/'
 
@@ -15,16 +15,9 @@ let c = new Crawler({
         let name = $(item).find('div.champion_name').text().replace('\'', '')
         let img = $(item).find('a.lol_champion img').attr('src')
 
-        let hero = new Hero({
-          heroName: name,
-          imageUrl: img
-        })
-
-        hero.save((err, result) => {
-          if (err) return console.log(err)
+        Hero.addHero(name, img, (result) => {
           console.log(result)
         })
-
       })
     }
     done()
