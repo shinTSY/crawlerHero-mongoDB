@@ -20,11 +20,8 @@ module.exports = {
       callback(result)
     })
   },
-  addHero(heroName, imageUrl, callback){
-    let hero = new Hero({
-      heroName,
-      imageUrl
-    })
+  addHero(obj, callback){
+    let hero = new Hero(obj)
     hero.save((err, result) => {
       callback(result)
     })
