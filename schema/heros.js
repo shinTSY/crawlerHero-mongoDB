@@ -3,6 +3,8 @@ const Schema = mongoose.Schema
 
 module.exports = mongoose.model('Hero', new Schema({
   heroName: {type: String},
+  heroTitle: {type: String},
   imageUrl: {type: String},
-  detailUrl: {type: String}
+  skins: {type: Array},
+  bigSkin: {type: Array}
 }, {versionKey: false}))

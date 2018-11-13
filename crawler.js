@@ -6,7 +6,6 @@ let url = 'http://lol.duowan.com/'
 
 let c1 = new Crawler({
   maxConnections: 10,
-  rateLimit: 1000,
   callback(error, res, done) {
     if (error) {
       console.log(error)
@@ -17,25 +16,17 @@ let c1 = new Crawler({
         let heroName = $(item).find('em').text()
         let imageUrl = $(item).find('img').attr('data-src')
         let detailUrl = $(item).find('a').attr('href')
-
         temArr.push({
-          name,
-          imgUrl,
-          detailUrl
-        })
-        Hero.addHero({
           heroName,
           imageUrl,
           detailUrl
-        }, (result) => {
-          console.log(result)
         })
       })
 
       for (let i = 0; i < temArr.length; i++) {
         cImg.queue({
-          uri: temArr[i].imgUrl,
-          filename: './img/' + temArr[i].name + '.png'
+          uri: temArr[i].imageUrl,
+          filename: './img/' + temArr[i].heroName + '.png'
         })
         c2.queue(temArr[i].detailUrl)
       }
@@ -48,7 +39,6 @@ let c1 = new Crawler({
 let cImg = new Crawler({
   encoding: null,
   jQuery: false, // set false to suppress warning message.
-  rateLimit: 1000,
   callback: function (err, res, done) {
     if (err) {
       console.error(err.stack);
@@ -61,7 +51,6 @@ let cImg = new Crawler({
 
 let c2 = new Crawler({
   maxConnections: 10,
-  rateLimit: 1000,
   callback(error, res, done) {
     if (error) {
       console.log(error)
@@ -83,6 +72,25 @@ let c2 = new Crawler({
           filename: './skin/' + heroName + i + '.png'
         })
       }
+
+      let bigSkin = []
+      $('.ui-slide__content li').each((index, item) => {
+        let bigItem = $(item).find('img').attr('src')
+        bigSkin.push(bigItem)
+        cImg.queue({
+          uri: bigItem,
+          filename: `./bigSkin/${heroName}_big${index}.png`
+        })
+      })
+
+      Hero.addHero({
+        heroName,
+        heroTitle,
+        skins,
+        bigSkin
+      }, (result) => {
+        console.log(heroName + ' 入库成功')
+      })
 
     }
     done()
